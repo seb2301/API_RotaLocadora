@@ -1,13 +1,23 @@
 <template>
-    <div class="login-container">
-      <h2>Login</h2>
-      <form @submit.prevent="login">
-        <input v-model="email" type="email" placeholder="E-mail" />
-        <input v-model="password" type="password" placeholder="Senha" />
-        <button type="submit">Entrar</button>
-      </form>
-    </div>
-  </template>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form @submit.prevent="login">
+      <input
+        v-model="email"
+        type="email"
+        placeholder="E-mail"
+      >
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Senha"
+      >
+      <button type="submit">
+        Entrar
+      </button>
+    </form>
+  </div>
+</template>
   
   <script>
   import api from '../services/api';

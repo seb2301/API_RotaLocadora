@@ -1,18 +1,21 @@
 <template>
-    <div>
-      <Navbar />
-      <h2>Detalhes do Veículo</h2>
-      <p>Placa: {{ vehicle.plate }}</p>
-      <p>Marca: {{ vehicle.brand }}</p>
-      <p>Modelo: {{ vehicle.model }}</p>
-      <p>Localização:</p>
-      <div id="map" style="height: 400px;"></div>
-    </div>
-  </template>
+  <div>
+    <Navbar />
+    <h2>Detalhes do Veículo</h2>
+    <p>Placa: {{ vehicle.plate }}</p>
+    <p>Marca: {{ vehicle.brand }}</p>
+    <p>Modelo: {{ vehicle.model }}</p>
+    <p>Localização:</p>
+    <div
+      id="map"
+      style="height: 400px;"
+    />
+  </div>
+</template>
   
   <script>
-  import Navbar from '../components/Navbar.vue';
-  import { MapContainer, TileLayer, Marker, Popup } from 'leaflet';
+  import Navbar from '../components/AppNavbar.vue';
+  import { MapContainer, TileLayer, Marker, } from 'leaflet';
   
   export default {
     components: { Navbar },

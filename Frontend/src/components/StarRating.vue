@@ -1,16 +1,16 @@
 <template>
-    <div class="star-rating">
-      <span
-        v-for="star in 5"
-        :key="star"
-        class="star"
-        :class="{ filled: star <= currentRating }"
-        @click="rate(star)"
-      >
-        ★
-      </span>
-    </div>
-  </template>
+  <div class="star-rating">
+    <span
+      v-for="star in 5"
+      :key="star"
+      class="star"
+      :class="{ filled: star <= currentRating }"
+      @click="rate(star)"
+    >
+      ★
+    </span>
+  </div>
+</template>
   
   <script>
   export default {

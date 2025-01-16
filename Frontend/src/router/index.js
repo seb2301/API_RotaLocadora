@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import Login from '../views/UserLogin.vue';
+import Register from '../views/UserRegister.vue';
 import VehicleList from '../views/VehicleList.vue';
-import History from '../views/History.vue';
-import VehicleDetails from '../views/VehicleDetails.vue';
+import History from '../views/UserHistory.vue';
+import VehicleDetails from '../views/VehicleDetailsPage.vue';
 
 const routes = [
   { path: '/', component: Login },

@@ -1,16 +1,24 @@
 <template>
-    <div class="modal" v-if="isVisible">
-      <div class="modal-content">
-        <header class="modal-header">
-          <h2>{{ title }}</h2>
-          <button class="close-btn" @click="closeModal">×</button>
-        </header>
-        <main class="modal-body">
-          <slot></slot>
-        </main>
-      </div>
+  <div
+    v-if="isVisible"
+    class="modal"
+  >
+    <div class="modal-content">
+      <header class="modal-header">
+        <h2>{{ title }}</h2>
+        <button
+          class="close-btn"
+          @click="closeModal"
+        >
+          ×
+        </button>
+      </header>
+      <main class="modal-body">
+        <slot />
+      </main>
     </div>
-  </template>
+  </div>
+</template>
   
   <script>
   export default {

@@ -1,15 +1,32 @@
 <template>
-    <div class="register-container">
-      <h2>Registrar</h2>
-      <form @submit.prevent="register">
-        <input v-model="name" type="text" placeholder="Nome" />
-        <input v-model="email" type="email" placeholder="E-mail" />
-        <input v-model="password" type="password" placeholder="Senha" />
-        <input v-model="birthDate" type="date" />
-        <button type="submit">Cadastrar</button>
-      </form>
-    </div>
-  </template>
+  <div class="register-container">
+    <h2>Registrar</h2>
+    <form @submit.prevent="register">
+      <input
+        v-model="name"
+        type="text"
+        placeholder="Nome"
+      >
+      <input
+        v-model="email"
+        type="email"
+        placeholder="E-mail"
+      >
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Senha"
+      >
+      <input
+        v-model="birthDate"
+        type="date"
+      >
+      <button type="submit">
+        Cadastrar
+      </button>
+    </form>
+  </div>
+</template>
   
   <script>
   import api from '../services/api';

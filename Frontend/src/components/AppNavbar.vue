@@ -1,15 +1,27 @@
 <template>
-    <nav class="navbar">
-      <div class="navbar-container">
-        <h1 class="navbar-logo">RotaLocadora</h1>
-        <ul class="navbar-links">
-          <li><router-link to="/vehicles">Veículos</router-link></li>
-          <li><router-link to="/history">Histórico</router-link></li>
-          <li @click="logout">Sair</li>
-        </ul>
-      </div>
-    </nav>
-  </template>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <h1 class="navbar-logo">
+        RotaLocadora
+      </h1>
+      <ul class="navbar-links">
+        <li>
+          <router-link to="/vehicles">
+            Veículos
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/history">
+            Histórico
+          </router-link>
+        </li>
+        <li @click="logout">
+          Sair
+        </li>
+      </ul>
+    </div>
+  </nav>
+</template>
   
   <script>
   export default {
