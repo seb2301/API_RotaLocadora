@@ -11,6 +11,8 @@ const Vehicle = db.define('Vehicle', {
   usePurpose: { type: DataTypes.STRING },
   latitude: { type: DataTypes.FLOAT },
   longitude: { type: DataTypes.FLOAT },
+  comfortLevel: { type: DataTypes.INTEGER },
+  zeroKm: { type: DataTypes.BOOLEAN, defaultValue: false },
 });
 
 module.exports = Vehicle;

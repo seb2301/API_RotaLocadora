@@ -1,32 +1,32 @@
-const User = require("../models/users");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const register = async (req, res) => {
+exports.register = async (req, res) => {
+  const { name, email, password, birthDate } = req.body;
+
   try {
-    const { name, email, password, dob } = req.body;
-    const user = new User({ name, email, password, dob });
-    await user.save();
-    res.status(201).json({ message: "Usuário registrado com sucesso" });
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao registrar usuário" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hashedPassword, birthDate });
+    res.json({ message: 'Usuário registrado com sucesso!', user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-const login = async (req, res) => {
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "Usuário não encontrado" });
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Credenciais inválidas" });
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) return res.status(401).json({ message: 'Senha incorreta' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.status(200).json({ token, user: { name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ error: "Erro ao fazer login" });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
-
-module.exports = { register, login };
