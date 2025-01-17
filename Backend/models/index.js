@@ -1,19 +1,38 @@
+const { Sequelize, DataTypes } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
-const { Sequelize } = require("sequelize");
-const config = require("../config/config.js"); 
+const basename = path.basename(__filename);
+const db = {};
 
-const env = process.env.NODE_ENV || "development";
-const dbConfig = config[env];
-
+// Configuração do Sequelize com o dialect explícito
 const sequelize = new Sequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
+  process.env.DB_NAME,      // Nome do banco de dados
+  process.env.DB_USERNAME,  // Nome de usuário
+  process.env.DB_PASSWORD,  // Senha
   {
-    host: dbConfig.host,
-    dialect: dbConfig.dialect,
+    host: process.env.DB_HOST,          // Host do banco
+    dialect: process.env.DB_DIALECT,    // Dialeto (ex.: mysql, postgres)
+    logging: false,                     // Desativa logs de SQL
   }
 );
 
-module.exports = sequelize;
+// Carregamento de modelos
+fs.readdirSync(__dirname)
+  .filter((file) => file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js")
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(sequelize, DataTypes);
+    db[model.name] = model;
+  });
+
+// Configuração de associações entre os modelos
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;
+

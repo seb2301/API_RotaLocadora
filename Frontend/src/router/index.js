@@ -1,20 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../views/UserLogin.vue';
-import Register from '../views/UserRegister.vue';
-import VehicleList from '../views/VehicleList.vue';
-import History from '../views/UserHistory.vue';
-import VehicleDetails from '../views/VehicleDetailsPage.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import UserLogin from "@/views/UserLogin.vue";
+import UserRegister from "@/views/UserRegister.vue";
 
 const routes = [
-  { path: '/', component: Login },
-  { path: '/register', component: Register },
-  { path: '/vehicles', component: VehicleList },
-  { path: '/history', component: History },
-  { path: '/vehicles/:id', component: VehicleDetails },
+  { path: "/", name: "Login", component: UserLogin },
+  { path: "/register", name: "Register", component: UserRegister },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
