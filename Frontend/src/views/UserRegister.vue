@@ -100,20 +100,22 @@ export default {
       this.showDatePicker = false; // Fecha o seletor após escolher a data
     },
     async register() {
-      try {
-        await api.post("/auth/register", {
-          name: this.name,
-          birth_date: this.birthDate,
-          email: this.email,
-          password: this.password,
-        });
-        alert("Usuário registrado com sucesso!");
-        this.$router.push("/");
-      } catch (error) {
-        alert("Erro ao registrar usuário. Tente novamente.");
-      }
-    },
-  },
+    try {
+      const response = await api.post("/auth/register", {
+        name: this.name,
+        birthDate: this.birthDate,
+        email: this.email,
+        password: this.password,
+      });
+
+      // Certifique-se de que está acessando o campo correto
+      alert(`Usuário cadastrado com sucesso! ID do usuário: ${response.data.userId}`);
+      this.$router.push("/");
+    } catch (error) {
+      alert(error.response?.data?.message || "Erro ao registrar usuário.");
+    }
+  }
+},
 };
 </script>
 

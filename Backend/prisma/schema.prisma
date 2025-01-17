@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement()) // Chave primária
   name      String
   birthDate DateTime
   email     String   @unique
@@ -16,3 +16,4 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+

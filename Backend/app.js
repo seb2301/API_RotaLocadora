@@ -1,15 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
+const authRoutes = require("./routes/auth"); // Certifique-se do caminho correto
+const prisma = require("./prismaClient"); // Certifique-se que este arquivo foi configurado corretamente
 
-const userRoutes = require("./routes/userRoutes");
+dotenv.config();
 
 const app = express();
 
-// Middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 // Rotas
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
