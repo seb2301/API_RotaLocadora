@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const db = require('../database/config');
+const { DataTypes } = require("sequelize");
+const db = require("../database/config");
 
-const Vehicle = db.define('Vehicle', {
+const Vehicle = db.define("Vehicle", {
   plate: { type: DataTypes.STRING, unique: true, allowNull: false },
   description: { type: DataTypes.STRING },
   year: { type: DataTypes.INTEGER, allowNull: false },

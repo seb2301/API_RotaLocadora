@@ -6,7 +6,6 @@
         <h2>Novo Cadastro</h2>
       </div>
       <form @submit.prevent="register">
-        <!-- Nome de Usuário -->
         <div class="input-wrapper">
           <h3>Nome de usuário</h3>
           <input
@@ -17,7 +16,6 @@
           />
         </div>
 
-        <!-- Data de Aniversário -->
         <div class="input-wrapper date-container">
           <h4>Data de aniversário</h4>
           <input
@@ -42,7 +40,6 @@
           />
         </div>
 
-        <!-- E-mail -->
         <div class="input-wrapper">
           <h5>E-mail</h5>
           <input
@@ -53,7 +50,6 @@
           />
         </div>
 
-        <!-- Senha -->
         <div class="input-wrapper password-container">
           <h6>Senha</h6>
           <input
@@ -88,7 +84,7 @@ export default {
       email: "",
       password: "",
       showPassword: false,
-      showDatePicker: false, // Controle para exibir o seletor de data
+      showDatePicker: false, 
     };
   },
   methods: {
@@ -96,8 +92,8 @@ export default {
       this.showPassword = !this.showPassword;
     },
     handleDateChange(event) {
-      this.birthDate = event.target.value; // Atualiza o valor do input
-      this.showDatePicker = false; // Fecha o seletor após escolher a data
+      this.birthDate = event.target.value; 
+      this.showDatePicker = false; 
     },
     async register() {
     try {
@@ -108,7 +104,6 @@ export default {
         password: this.password,
       });
 
-      // Certifique-se de que está acessando o campo correto
       alert(`Usuário cadastrado com sucesso! ID do usuário: ${response.data.userId}`);
       this.$router.push("/");
     } catch (error) {
@@ -120,7 +115,6 @@ export default {
 </script>
 
 <style scoped>
-/* Container principal */
 .register-container {
   display: flex;
   justify-content: center;
@@ -130,7 +124,6 @@ export default {
   background-size: cover;
 }
 
-/* Caixa de registro */
 .register-box {
   background-color: white;
   border-radius: 12px;
@@ -141,7 +134,6 @@ export default {
   text-align: center;
 }
 
-/* Header */
 .register-header {
   margin-bottom: 1.5rem;
 }
@@ -157,25 +149,23 @@ h2 {
   font-weight: 600;
 }
 
-/* Estilos de h3, h4, h5 e h6 */
 .input-wrapper h3,
 .input-wrapper h4,
 .input-wrapper h5,
 .input-wrapper h6 {
   position: absolute;
-  top: -7px; /* Ajusta a posição acima do input */
-  left: 10px; /* Ajusta o espaçamento da borda */
+  top: -7px; 
+  left: 10px; 
   font-weight: 400;
   line-height: 14.06px;
   text-align: left;
   font-size: 0.8rem;
   color: #555;
-  background-color: white; /* Fundo branco para sobrepor o input */
+  background-color: white; 
   padding: 0 5px;
-  z-index: 2; /* Garante que o texto esteja à frente */
+  z-index: 2; 
 }
 
-/* Inputs */
 .input-wrapper {
   position: relative;
   margin-bottom: 1.5rem;
@@ -202,7 +192,6 @@ h2 {
   background-color: white;
 }
 
-/* Campo de Data de Aniversário */
 .date-container input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -216,7 +205,6 @@ h2 {
   cursor: pointer;
 }
 
-/* Botão para a seta (ícone customizado) */
 .date-toggle {
   position: absolute;
   top: 50%;
@@ -233,7 +221,6 @@ h2 {
   color: #007bff;
 }
 
-/* Campo de Senha com Ícone */
 .password-container {
   position: relative;
 }
@@ -262,7 +249,6 @@ h2 {
   color: #007bff;
 }
 
-/* Botão de Cadastro */
 .register-button {
   background-color: #007bff;
   color: white;
@@ -279,7 +265,6 @@ h2 {
   background-color: #0056b3;
 }
 
-/* Footer */
 .register-footer {
   margin-top: 1rem;
 }

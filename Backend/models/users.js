@@ -19,10 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Configuração de associações, se necessário
-  User.associate = (models) => {
-    // Exemplo: User.hasMany(models.Vehicle);
-  };
+  User.associate = (models) => {};
 
   return User;
 };

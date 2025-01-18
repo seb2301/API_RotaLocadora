@@ -1,15 +1,13 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const prisma = require("../prismaClient"); // Certifique-se que o caminho está correto
-const router = express.Router(); // Define o roteador do Express
+const prisma = require("../prismaClient");
+const router = express.Router();
 
-// Rota de registro de usuário
 router.post("/register", async (req, res) => {
   const { name, birthDate, email, password } = req.body;
 
   try {
-    // Verifica se o e-mail já está em uso
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -18,10 +16,8 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "E-mail já está em uso" });
     }
 
-    // Criptografa a senha
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Cria o novo usuário
     const newUser = await prisma.user.create({
       data: {
         name,
@@ -31,7 +27,6 @@ router.post("/register", async (req, res) => {
       },
     });
 
-    // Retorna o sucesso
     res.status(201).json({
       message: "Usuário cadastrado com sucesso!",
       userId: newUser.id,

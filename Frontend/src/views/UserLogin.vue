@@ -6,13 +6,12 @@
         <h2>Login</h2>
       </div>
       <form @submit.prevent="login">
-        <!-- Container do E-mail -->
+      
         <div class="input-wrapper">
           <h6>E-mail</h6>
           <input v-model="email" type="email" placeholder="Digite seu e-mail" required />
         </div>
 
-        <!-- Container da Senha -->
         <div class="input-wrapper password-container">
           <h6>Senha</h6>
           <input
@@ -136,30 +135,27 @@ opacity: 0px;
 background-color: white;
 }
 .input-wrapper {
-  position: relative; /* Para permitir posicionamento absoluto do <h6> */
+  position: relative; 
   width: 100%;
   margin: 0; 
-  /* Centraliza o container */
 }
 
-/* Estilo do texto (h6) na frente do input */
 .input-wrapper h6 {
   position: absolute;
-  top: -7px; /* Ajusta a posição acima do input */
-  left: 10px; /* Ajusta o espaçamento da borda */
+  top: -7px; 
+  left: 10px; 
   font-weight: 400;
   line-height: 14.06px;
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
   font-size: 0.8rem;
-  color: #555; /* Cor suave para o texto */
-  background-color: white; /* Fundo branco para sobrepor o input */
-  padding: 0 5px; /* Adiciona preenchimento ao redor do texto */
-  z-index: 2; /* Garante que o texto esteja à frente */
+  color: #555; 
+  background-color: white; 
+  padding: 0 5px; 
+  z-index: 2; 
 }
 
-/* Estilo do input */
 .input-wrapper input {
   display: flex; 
   justify-content: center; 

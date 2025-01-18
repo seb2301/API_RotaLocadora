@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const prisma = require("../prisma/prismaClient"); // Certifique-se de importar o Prisma Client
+const prisma = require("../prisma/prismaClient");
 
 router.get("/test-db", async (req, res) => {
   try {
-    // Tente acessar o modelo User
-    const users = await prisma.user.findMany(); // Certifique-se de que "user" corresponde ao modelo em schema.prisma
+    const users = await prisma.user.findMany();
     res.status(200).json({
       message: "Conexão com o banco de dados bem-sucedida!",
       data: users,

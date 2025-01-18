@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <router-view /> <!-- Mostra as páginas configuradas no Vue Router -->
+    <router-view /> 
   </v-app>
 </template>
 
@@ -11,5 +11,4 @@ export default {
 </script>
 
 <style>
-/* Adicione estilos globais se necessário */
 </style>
