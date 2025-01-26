@@ -1,16 +1,18 @@
+// routes/vehicleRoutes.js
 const express = require("express");
-const {
-  getAllVehicles,
-  addVehicle,
-  updateVehicle,
-  deleteVehicle,
-} = require("../controllers/vehicleController");
-
 const router = express.Router();
+const vehicleController = require("../controllers/vehicleController");
 
-router.get("/", getAllVehicles);
-router.post("/", addVehicle);
-router.put("/:id", updateVehicle);
-router.delete("/:id", deleteVehicle);
+// Rota para criar veículo
+router.post("/", vehicleController.createVehicle);
+
+// Rota para buscar todos os veículos
+router.get("/", vehicleController.getAllVehicles);
+
+// Rota para atualizar um veículo
+router.put("/:id", vehicleController.updateVehicle);
+
+// Rota para deletar um veículo
+router.delete("/:id", vehicleController.deleteVehicle);
 
 module.exports = router;

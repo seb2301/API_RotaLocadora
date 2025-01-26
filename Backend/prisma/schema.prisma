@@ -8,11 +8,41 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   birthDate DateTime
-  email     String   @unique
+  email     String    @unique
   password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  histories history[]
+
+  @@map("users")
+}
+
+model history {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  details   String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "history_userId_fkey")
+  @@map("history")
+}
+
+model vehicle {
+  id           Int      @id @default(autoincrement())
+  plate        String   @unique
+  brand        String
+  model        String
+  year         Int
+  color        String
+  usage        String
+  isNew        Boolean
+  comfortLevel Int
+  location     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

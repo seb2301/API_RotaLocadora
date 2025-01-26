@@ -5,11 +5,15 @@
         <img src="@/assets/logo.png" alt="Logo RotaLocadora" class="login-logo" />
         <h2>Login</h2>
       </div>
-      <form @submit.prevent="login">
-      
+      <form @submit.prevent="loginUser">
         <div class="input-wrapper">
           <h6>E-mail</h6>
-          <input v-model="email" type="email" placeholder="Digite seu e-mail" required />
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Digite o e-mail"
+            required
+          />
         </div>
 
         <div class="input-wrapper password-container">
@@ -17,10 +21,14 @@
           <input
             v-model="password"
             :type="showPassword ? 'text' : 'password'"
-            placeholder="Digite sua senha"
+            placeholder="Digite a senha"
             required
           />
-          <button type="button" class="toggle-password" @click="togglePassword">
+          <button
+            type="button"
+            class="toggle-password"
+            @click="togglePassword"
+          >
             <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
           </button>
         </div>
@@ -35,7 +43,7 @@
 </template>
 
 <script>
-import api from "@/services/api";
+import api, { setAuthToken } from "@/services/api";
 
 export default {
   name: "UserLogin",
@@ -43,23 +51,36 @@ export default {
     return {
       email: "",
       password: "",
-      showPassword: false, 
+      showPassword: false,
     };
   },
   methods: {
     togglePassword() {
       this.showPassword = !this.showPassword;
     },
-    async login() {
+    async loginUser() {
       try {
+        console.log("Tentando fazer login...");
         const response = await api.post("/auth/login", {
           email: this.email,
           password: this.password,
         });
-        localStorage.setItem("token", response.data.token);
+
+        console.log("Resposta do login:", response.data);
+
+        const { token } = response.data;
+        if (!token) {
+          throw new Error("Token não recebido do servidor.");
+        }
+
+        setAuthToken(token);
+        localStorage.setItem("token", token);
+
+        console.log("Login bem-sucedido. Token armazenado.");
         this.$router.push("/vehicles");
       } catch (error) {
-        alert("Erro no login. Verifique suas credenciais.");
+        console.error("Erro ao fazer login:", error);
+        alert("Erro ao fazer login. Verifique seu e-mail e senha.");
       }
     },
   },
@@ -67,124 +88,107 @@ export default {
 </script>
 
 <style scoped>
+/* Container geral que pega 100% da tela */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+
+  /* Background: define sua imagem de fundo */
   background: url("@/assets/login-background.png") no-repeat center center fixed;
   background-size: cover;
 }
 
+/* Caixa branca onde fica o formulário */
 .login-box {
-  background-color: white;
+  width: 380px;
+  background-color: #fff;
   border-radius: 30px;
   padding: 2rem;
-  width: 400px;
-  height: 380px;
-  top: 344px;
-  left: 720px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  }
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+/* Cabeçalho do formulário */
 .login-header {
-  margin-bottom: 0.1rem;
-  }
+  margin-bottom: 1rem;
+}
 
+/* Logo */
 .login-logo {
-  width: 50px;
-  height: 50px;
+  width: 83px;
+height: 70px;
+top: 40px;
+left: 199px;
+gap: 0px;
+opacity: 0px;
+
 }
 
-h2 {
+/* Título "Login" */
+.login-header h2 {
   font-size: 1.5rem;
-  margin: 0.5rem 0;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
 }
 
+/* Formulário */
 form {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   gap: 1rem;
 }
 
-input {
-  width: 90%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  
-}
-
-input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-h6 {
-width: 50px;
-height: 10px;
-margin: 0% 0% -1% 0%;
-top: 0px;
-left: 8px;
-padding: 0px 3px 0px 3px;
-gap: 1px;
-opacity: 0px;
-background-color: white;
-}
+/* Container de cada input */
 .input-wrapper {
-  position: relative; 
+  position: relative;
   width: 100%;
-  margin: 0; 
+  margin: 0 auto;
 }
 
+/* Label estilo “floating label” */
 .input-wrapper h6 {
   position: absolute;
-  top: -7px; 
-  left: 10px; 
-  font-weight: 400;
-  line-height: 14.06px;
-  text-align: left;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
+  top: -9px;
+  left: 14px;
   font-size: 0.8rem;
-  color: #555; 
-  background-color: white; 
-  padding: 0 5px; 
-  z-index: 2; 
+  font-weight: 400;
+  color: #333333;
+  background-color: white;
+  padding: 0 5px;
+  z-index: 2;
 }
 
+/* Input em si */
 .input-wrapper input {
-  display: flex; 
-  justify-content: center; 
   width: 100%;
-  padding: 0.8rem;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  padding: 0.8rem;
   color: #A9A7A9;
+}
 
-  
-  
+.input-wrapper input::placeholder {
+  color: #ccc;
 }
 
 .input-wrapper input:focus {
   outline: none;
   border-color: #007bff;
 }
+
+/* Para o container do password + olho */
 .password-container {
   position: relative;
 }
 
-.password-container input {
-  width: 100%;
-}
-
+/* Botão do “olho” */
 .toggle-password {
   position: absolute;
-  left: 95%;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -195,37 +199,41 @@ background-color: white;
 .toggle-password i {
   font-size: 1.2rem;
   color: #A9A7A9;
-
 }
 
 .toggle-password:hover i {
   color: #007bff;
 }
 
+/* Botão de login */
 .login-button {
   background-color: #007bff;
   color: white;
+  font-size: 1rem;
   padding: 0.8rem;
   border: none;
-  border-radius: 4px;
-  font-size: 1rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .login-button:hover {
   background-color: #0056b3;
 }
 
+/* Rodapé do login */
 .login-footer {
-  margin-top: 1rem;
+  margin-top: 1.2rem;
 }
 
 .register-link {
-  color: #007bff;
+  color: #A9A7A9;
   text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .register-link:hover {
   text-decoration: underline;
+  color: #007bff;
 }
 </style>

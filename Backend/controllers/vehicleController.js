@@ -1,39 +1,147 @@
-const Vehicle = require("../models/Vehicle");
+// controllers/vehicleController.js
+const prisma = require("../config/database");
 
+/**
+ * GET /api/vehicles
+ * Busca todos os veículos
+ */
 exports.getAllVehicles = async (req, res) => {
   try {
-    const vehicles = await Vehicle.findAll();
-    res.json(vehicles);
+    const vehicles = await prisma.vehicle.findMany(); 
+    return res.status(200).json(vehicles);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao buscar veículos:", error);
+    return res.status(500).json({ error: "Erro ao buscar veículos." });
   }
 };
 
-exports.addVehicle = async (req, res) => {
+/**
+ * POST /api/vehicles
+ * Cria um novo veículo e registra no histórico
+ */
+exports.createVehicle = async (req, res) => {
+  const {
+    plate,
+    brand,
+    model,
+    year,
+    color,
+    usage,
+    isNew,
+    comfortLevel,
+    location,
+  } = req.body;
+
   try {
-    const vehicle = await Vehicle.create(req.body);
-    res.json({ message: "Veículo adicionado com sucesso!", vehicle });
+    // Cria o veículo
+    const newVehicle = await prisma.vehicle.create({
+      data: {
+        plate,
+        brand,
+        model,
+        year: parseInt(year, 10),
+        color,
+        usage,
+        isNew: Boolean(isNew),
+        comfortLevel: parseInt(comfortLevel, 10),
+        location,
+      },
+    });
+
+    // Registra no histórico
+    await prisma.history.create({
+      data: {
+        // Idealmente, req.userId vem de um middleware que extrai o ID do token
+        userId: req.userId || 1,
+        action: "Criou Veículo",
+        details: `Usuário criou o veículo de placa ${newVehicle.plate}`,
+      },
+    });
+
+    return res
+      .status(201)
+      .json({ message: "Veículo criado com sucesso!", id: newVehicle.id });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao criar veículo:", error);
+    return res.status(500).json({ message: "Erro ao criar veículo." });
   }
 };
 
+/**
+ * PUT /api/vehicles/:id
+ * Atualiza um veículo e registra no histórico
+ */
 exports.updateVehicle = async (req, res) => {
+  const { id } = req.params;
+  const {
+    plate,
+    brand,
+    model,
+    year,
+    color,
+    usage,
+    isNew,
+    comfortLevel,
+    location,
+  } = req.body;
+
   try {
-    const { id } = req.params;
-    const vehicle = await Vehicle.update(req.body, { where: { id } });
-    res.json({ message: "Veículo atualizado com sucesso!", vehicle });
+    const updatedVehicle = await prisma.vehicle.update({
+      where: { id: parseInt(id, 10) },
+      data: {
+        plate,
+        brand,
+        model,
+        year: parseInt(year, 10),
+        color,
+        usage,
+        isNew: Boolean(isNew),
+        comfortLevel: parseInt(comfortLevel, 10),
+        location,
+      },
+    });
+
+    // Registra no histórico
+    await prisma.history.create({
+      data: {
+        userId: req.userId || 1,
+        action: "Editou Veículo",
+        details: `Usuário editou o veículo de placa ${updatedVehicle.plate}`,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Veículo atualizado com sucesso!", vehicle: updatedVehicle });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao atualizar veículo:", error);
+    return res.status(500).json({ message: "Erro ao atualizar veículo." });
   }
 };
 
+/**
+ * DELETE /api/vehicles/:id
+ * Exclui um veículo e registra no histórico
+ */
 exports.deleteVehicle = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    await Vehicle.destroy({ where: { id } });
-    res.json({ message: "Veículo excluído com sucesso!" });
+    const deletedVehicle = await prisma.vehicle.delete({
+      where: { id: parseInt(id, 10) },
+    });
+
+    // Registra no histórico
+    await prisma.history.create({
+      data: {
+        userId: req.userId || 1,
+        action: "Excluiu Veículo",
+        details: `Usuário excluiu o veículo de placa ${deletedVehicle.plate}`,
+      },
+    });
+
+    return res.json({ message: "Veículo excluído com sucesso!" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Erro ao excluir veículo:", error);
+    return res.status(500).json({ message: "Erro ao excluir veículo." });
   }
 };

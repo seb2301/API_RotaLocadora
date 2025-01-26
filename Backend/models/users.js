@@ -1,25 +1,39 @@
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    birth_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  });
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-  User.associate = (models) => {};
+// Operações relacionadas aos usuários
+module.exports = {
+  // Buscar todos os usuários
+  getAllUsers: async () => {
+    return await prisma.user.findMany();
+  },
 
-  return User;
+  // Criar um novo usuário
+  createUser: async (userData) => {
+    return await prisma.user.create({
+      data: userData,
+    });
+  },
+
+  // Buscar um usuário por ID
+  getUserById: async (id) => {
+    return await prisma.user.findUnique({
+      where: { id: parseInt(id) },
+    });
+  },
+
+  // Atualizar um usuário
+  updateUser: async (id, userData) => {
+    return await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: userData,
+    });
+  },
+
+  // Excluir um usuário
+  deleteUser: async (id) => {
+    return await prisma.user.delete({
+      where: { id: parseInt(id) },
+    });
+  },
 };

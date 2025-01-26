@@ -1,10 +1,9 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { PrismaClient } = require("@prisma/client");
 const fs = require("fs");
 const path = require("path");
 const basename = path.basename(__filename);
-const db = {};
 
-const sequelize = new Sequelize(
+const prisma = new PrismaClient(
   process.env.DB_NAME,
   process.env.DB_USERNAME,
   process.env.DB_PASSWORD,
@@ -14,6 +13,8 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
+
+const db = {};
 
 fs.readdirSync(__dirname)
   .filter(
@@ -30,8 +31,7 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.prisma = prisma; // Adiciona o cliente Prisma ao objeto db
 
 module.exports = db;
+

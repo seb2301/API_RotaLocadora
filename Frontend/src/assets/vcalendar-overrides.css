@@ -1,0 +1,106 @@
+/* vcalendar-overrides.css */
+
+/* Container principal do popup do calendário */
+.vc-pane {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem; /* Se quiser um “acolchoado” interno */
+    min-width: 250px; /* Ajuste conforme o layout do Figma */
+    font-family: 'Roboto', sans-serif; /* Ou a fonte do seu design */
+  }
+  
+  /* Barra de navegação (mês/ano + setas) */
+  .vc-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem; 
+  }
+  
+  /* Título do mês/ano (ex: “janeiro 2025”) */
+  .vc-nav-title {
+    color: #007bff;
+    font-weight: 600;
+    text-transform: capitalize; /* Se quiser “Janeiro” em vez de “janeiro” */
+    font-size: 1rem; 
+  }
+  
+  /* Botões de seta (voltar/avançar) */
+  .vc-arrows {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .vc-arrows button {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+  
+  .vc-arrows button:hover {
+    background-color: #f0f0f0; 
+  }
+  
+  /* Grid de dias */
+  .vc-weeks {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+  }
+  
+  /* Cabeçalho de dias da semana (S, T, Q...) */
+  .vc-weekday-header {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #555;
+    font-weight: 600;
+  }
+  
+  /* Cada célula de dia */
+  .vc-day {
+    text-align: center;
+    padding: 0.6rem 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  
+  .vc-day:hover {
+    background-color: #eaeaea;
+  }
+  
+  /* Dias fora do mês atual, se v-calendar marcar assim */
+  .vc-day.vc-day--disabled,
+  .vc-day.vc-day--outside {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+  /* Dia selecionado */
+  .vc-day.vc-day--selected {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  /* Dia de hoje, se v-calendar tiver classe .vc-day--today */
+  .vc-day.vc-day--today {
+    border: 1px solid #007bff;
+    color: #007bff;
+    font-weight: 600;
+  }
+  
+  /* Ajustes de layout para celular (opcional) */
+  @media (max-width: 400px) {
+    .vc-pane {
+      min-width: 200px;
+      padding: 0.5rem;
+    }
+  }
+  

@@ -5,7 +5,7 @@
         <img src="@/assets/logo.png" alt="Logo RotaLocadora" class="register-logo" />
         <h2>Novo Cadastro</h2>
       </div>
-      <form @submit.prevent="register">
+      <form @submit.prevent="registerUser">
         <div class="input-wrapper">
           <h3>Nome de usuário</h3>
           <input
@@ -17,28 +17,33 @@
         </div>
 
         <div class="input-wrapper date-container">
-          <h4>Data de aniversário</h4>
-          <input
-            v-model="birthDate"
-            type="text"
-            placeholder="Selecione a data de aniversário"
-            readonly
-            @focus="showDatePicker = true"
-          />
-          <button
-            type="button"
-            class="date-toggle"
-            @click="showDatePicker = !showDatePicker"
-          >
-            <i class="fa fa-chevron-down"></i>
-          </button>
-          <input
-            ref="datePicker"
-            v-if="showDatePicker"
-            type="date"
-            @change="handleDateChange"
-          />
-        </div>
+  <h4>Data de aniversário</h4>
+  <input
+    v-model="birth_date"
+    type="text"
+    placeholder="Selecione a data de aniversário"
+    readonly
+    @click="showDatePicker = !showDatePicker"
+  />
+  <button
+    type="button"
+    class="date-toggle"
+    @click="showDatePicker = !showDatePicker"
+  >
+    <i class="fa fa-chevron-down"></i>
+  </button>
+
+  <div v-if="showDatePicker" class="custom-calendar">
+  <v-date-picker
+    :mode="'single'"
+    :min-date="new Date(1900, 0, 1)"
+    :max-date="new Date(2100, 11, 31)"
+    @update:model-value="onDateSelected"
+  />
+</div>
+
+</div>
+
 
         <div class="input-wrapper">
           <h5>E-mail</h5>
@@ -74,64 +79,82 @@
 
 <script>
 import api from "@/services/api";
+import { DatePicker } from "v-calendar";
 
 export default {
   name: "UserRegister",
+  components: {
+    'v-date-picker': DatePicker,
+  },
   data() {
     return {
+      // Junte tudo aqui:
       name: "",
-      birthDate: "",
+      birth_date: "",
       email: "",
       password: "",
       showPassword: false,
-      showDatePicker: false, 
+      showDatePicker: false,
     };
   },
   methods: {
     togglePassword() {
       this.showPassword = !this.showPassword;
     },
-    handleDateChange(event) {
-      this.birthDate = event.target.value; 
-      this.showDatePicker = false; 
+    onDateSelected(date) {
+      // date é um objeto Date do v-calendar
+      this.birth_date = this.formatDate(date);
+      // Fecha o calendário
+      this.showDatePicker = false;
     },
-    async register() {
-    try {
-      const response = await api.post("/auth/register", {
-        name: this.name,
-        birthDate: this.birthDate,
-        email: this.email,
-        password: this.password,
-      });
+    formatDate(date) {
+      // formata por ex. '14/05/2024'
+      return new Intl.DateTimeFormat('pt-BR').format(date);
+    },
 
-      alert(`Usuário cadastrado com sucesso! ID do usuário: ${response.data.userId}`);
-      this.$router.push("/");
-    } catch (error) {
-      alert(error.response?.data?.message || "Erro ao registrar usuário.");
+    async registerUser() {
+      try {
+        console.log("Tentando registrar usuário...");
+        const response = await api.post("/auth/register", {
+          name: this.name,
+          birth_date: this.birth_date,
+          email: this.email,
+          password: this.password,
+        });
+
+        alert(`Usuário cadastrado com sucesso! ID do usuário: ${response.data.userId}`);
+        console.log("Redirecionando para a página de login...");
+
+        // Redireciona para o login
+        this.$router.push("/login");
+      } catch (error) {
+        console.error("Erro ao registrar usuário:", error.response?.data || error);
+        alert(error.response?.data?.message || "Erro ao registrar usuário.");
+      }
     }
-  }
-},
+  },
 };
 </script>
 
+
 <style scoped>
+
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh; /* Em vez de height fixa, p/ layout adaptável */
   background: url("@/assets/login-background.png") no-repeat center center fixed;
   background-size: cover;
 }
 
 .register-box {
-  background-color: white;
-  border-radius: 12px;
+  background-color: #fff;
+  border-radius: 30px;
   padding: 2rem;
-  width: 100%;
-  max-width: 360px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 380px; /* Ajuste conforme o mock do Figma */
   text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .register-header {
@@ -141,43 +164,46 @@ export default {
 .register-logo {
   width: 50px;
   height: 50px;
+  margin-bottom: 0.5rem;
 }
 
-h2 {
+.register-header h2 {
   font-size: 1.5rem;
-  margin: 0.5rem 0;
+  margin: 0;
   font-weight: 600;
+  color: #333;
 }
 
+/* Estilo de cada input-wrapper */
+.input-wrapper {
+  position: relative;
+  margin-bottom: 1.3rem;
+  width: 100%;
+}
+
+/* Rótulos “Nome de usuário”, “Data de Aniversário” etc. */
 .input-wrapper h3,
 .input-wrapper h4,
 .input-wrapper h5,
 .input-wrapper h6 {
   position: absolute;
-  top: -7px; 
-  left: 10px; 
+  top: -9px; 
+  left: 14px; 
   font-weight: 400;
-  line-height: 14.06px;
-  text-align: left;
   font-size: 0.8rem;
   color: #555;
-  background-color: white; 
+  background-color: #fff; 
   padding: 0 5px;
   z-index: 2; 
 }
 
-.input-wrapper {
-  position: relative;
-  margin-bottom: 1.5rem;
-  width: 100%;
-}
-
+/* Inputs */
 .input-wrapper input {
-  width: 95%;
+  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #a9a7a9;
 }
 
@@ -189,51 +215,147 @@ h2 {
 .input-wrapper input:focus {
   outline: none;
   border-color: #007bff;
-  background-color: white;
 }
 
-.date-container input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+/* Ícone seta p/ baixo no input data */
+.date-container {
+  position: relative;
 }
 
-.date-container input::-webkit-calendar-picker-indicator {
-  position: absolute;
-  right: 1rem;
-  color: #aaa;
-  cursor: pointer;
-}
-
+/* Botão da seta */
 .date-toggle {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 14px;
   transform: translateY(-50%);
   background: none;
   border: none;
-  font-size: 1.2rem;
-  color: #888;
+  font-size: 1rem;
+  color: #a9a7a9;
   cursor: pointer;
 }
-
 .date-toggle:hover {
   color: #007bff;
 }
 
+/* Calendário custom */
+.custom-calendar {
+  position: absolute;
+  top: 60px; /* Ajuste p/ ficar logo abaixo do input */
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 999;
+}
+
+:deep(.vc-pane) {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem; 
+  min-width: 250px;
+  font-family: 'Roboto', sans-serif;
+}
+
+:deep(.vc-nav-container) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem; 
+}
+
+:deep(.vc-nav-title) {
+  color: #007bff;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 1rem; 
+}
+
+:deep(.vc-arrows) {
+  display: flex;
+  gap: 0.5rem;
+}
+
+:deep(.vc-arrows button) {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+:deep(.vc-arrows button:hover) {
+  background-color: #f0f0f0; 
+}
+
+:deep(.vc-weeks) {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+:deep(.vc-weekday-header) {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #555;
+  font-weight: 600;
+}
+
+:deep(.vc-day) {
+  text-align: center;
+  padding: 0.6rem 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+:deep(.vc-day:hover) {
+  background-color: #eaeaea;
+}
+
+:deep(.vc-day.vc-day--disabled),
+:deep(.vc-day.vc-day--outside) {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Dia selecionado */
+:deep(.vc-day.vc-day--selected) {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Dia de hoje */
+:deep(.vc-day.vc-day--today) {
+  border: 1px solid #007bff;
+  color: #007bff;
+  font-weight: 600;
+}
+
+@media (max-width: 400px) {
+  :deep(.vc-pane) {
+    min-width: 200px;
+    padding: 0.5rem;
+  }
+}
+
+
+/* Input de senha c/ olho */
 .password-container {
   position: relative;
 }
 
-.password-container input {
-  padding-right: 2.5rem;
-  width: 95%;
-}
-
 .toggle-password {
   position: absolute;
+  right: 14px;
   top: 50%;
-  right: 10px;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -244,11 +366,11 @@ h2 {
   font-size: 1.2rem;
   color: #888;
 }
-
 .toggle-password:hover i {
   color: #007bff;
 }
 
+/* Botão de cadastrar */
 .register-button {
   background-color: #007bff;
   color: white;
@@ -259,12 +381,13 @@ h2 {
   cursor: pointer;
   margin-top: 1rem;
   width: 100%;
+  font-weight: 600;
 }
-
 .register-button:hover {
   background-color: #0056b3;
 }
 
+/* Rodapé c/ link de login */
 .register-footer {
   margin-top: 1rem;
 }
@@ -272,9 +395,11 @@ h2 {
 .login-link {
   color: #a9a7a9;
   text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .login-link:hover {
   text-decoration: underline;
 }
+
 </style>
