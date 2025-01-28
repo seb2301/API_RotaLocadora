@@ -2,7 +2,11 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <img src="@/assets/logo.png" alt="Logo RotaLocadora" class="login-logo" />
+        <img
+          src="@/assets/logo.png"
+          alt="Logo RotaLocadora"
+          class="login-logo"
+        >
         <h2>Login</h2>
       </div>
       <form @submit.prevent="loginUser">
@@ -13,7 +17,7 @@
             type="email"
             placeholder="Digite o e-mail"
             required
-          />
+          >
         </div>
 
         <div class="input-wrapper password-container">
@@ -23,20 +27,30 @@
             :type="showPassword ? 'text' : 'password'"
             placeholder="Digite a senha"
             required
-          />
+          >
           <button
             type="button"
             class="toggle-password"
             @click="togglePassword"
           >
-            <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+            <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'" />
           </button>
         </div>
 
-        <button type="submit" class="login-button">Entrar</button>
+        <button
+          type="submit"
+          class="login-button"
+        >
+          Entrar
+        </button>
       </form>
       <div class="login-footer">
-        <router-link to="/register" class="register-link">Criar conta</router-link>
+        <router-link
+          to="/register"
+          class="register-link"
+        >
+          Criar conta
+        </router-link>
       </div>
     </div>
   </div>
@@ -88,19 +102,16 @@ export default {
 </script>
 
 <style scoped>
-/* Container geral que pega 100% da tela */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 
-  /* Background: define sua imagem de fundo */
   background: url("@/assets/login-background.png") no-repeat center center fixed;
   background-size: cover;
 }
 
-/* Caixa branca onde fica o formulário */
 .login-box {
   width: 380px;
   background-color: #fff;
@@ -110,12 +121,10 @@ export default {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Cabeçalho do formulário */
 .login-header {
   margin-bottom: 1rem;
 }
 
-/* Logo */
 .login-logo {
   width: 83px;
 height: 70px;
@@ -126,7 +135,6 @@ opacity: 0px;
 
 }
 
-/* Título "Login" */
 .login-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -134,21 +142,18 @@ opacity: 0px;
   color: #333;
 }
 
-/* Formulário */
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Container de cada input */
 .input-wrapper {
   position: relative;
   width: 100%;
   margin: 0 auto;
 }
 
-/* Label estilo “floating label” */
 .input-wrapper h6 {
   position: absolute;
   top: -9px;
@@ -161,7 +166,6 @@ form {
   z-index: 2;
 }
 
-/* Input em si */
 .input-wrapper input {
   width: 100%;
   border: 1px solid #ddd;
@@ -180,12 +184,10 @@ form {
   border-color: #007bff;
 }
 
-/* Para o container do password + olho */
 .password-container {
   position: relative;
 }
 
-/* Botão do “olho” */
 .toggle-password {
   position: absolute;
   right: 14px;
@@ -205,7 +207,6 @@ form {
   color: #007bff;
 }
 
-/* Botão de login */
 .login-button {
   background-color: #007bff;
   color: white;
@@ -221,7 +222,6 @@ form {
   background-color: #0056b3;
 }
 
-/* Rodapé do login */
 .login-footer {
   margin-top: 1.2rem;
 }

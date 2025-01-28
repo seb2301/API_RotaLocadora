@@ -1,37 +1,82 @@
 <template>
-  <div>
-    <Navbar />
-    <h2>Detalhes do Veículo</h2>
-    <p>Placa: {{ vehicle.plate }}</p>
-    <p>Marca: {{ vehicle.brand }}</p>
-    <p>Modelo: {{ vehicle.model }}</p>
-    <p>Localização:</p>
-    <div
-      id="map"
-      style="height: 400px;"
-    />
+  <div class="modal-overlay" @click.self="$emit('close')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Detalhes do Veículo</h2>
+        <button class="close-btn" @click="$emit('close')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Placa:</strong> {{ detailsVehicle.plate }}</p>
+        <p><strong>Marca:</strong> {{ detailsVehicle.brand }}</p>
+        <p><strong>Modelo:</strong> {{ detailsVehicle.model }}</p>
+        <p><strong>Propriedade de Uso:</strong> {{ detailsVehicle.usage }}</p>
+        <p><strong>Localização:</strong> {{ detailsVehicle.latitude }}, {{ detailsVehicle.longitude }}</p>
+        <div id="map" class="map"></div>
+      </div>
+    </div>
   </div>
 </template>
-  
-  <script>
-  import Navbar from '../components/AppNavbar.vue';
-  import { MapContainer, TileLayer, Marker, } from 'leaflet';
-  
-  export default {
-    components: { Navbar },
-    data() {
-      return {
-        vehicle: {},
-      };
+
+<script>
+import L from "leaflet";
+
+export default {
+  props: {
+    detailsVehicle: {
+      type: Object,
+      required: true,
     },
-    async mounted() {
-      const response = await this.$api.get(`/vehicles/${this.$route.params.id}`);
-      this.vehicle = response.data;
-  
-      const map = new MapContainer('map').setView([this.vehicle.latitude, this.vehicle.longitude], 13);
-      new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-      new Marker([this.vehicle.latitude, this.vehicle.longitude]).addTo(map).bindPopup('Localização do veículo');
-    },
-  };
-  </script>
-  
+  },
+  mounted() {
+    if (this.detailsVehicle.latitude && this.detailsVehicle.longitude) {
+      const map = L.map("map").setView(
+        [this.detailsVehicle.latitude, this.detailsVehicle.longitude],
+        15
+      );
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+      L.marker([this.detailsVehicle.latitude, this.detailsVehicle.longitude]).addTo(map);
+    }
+  },
+};
+</script>
+
+<style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.map {
+  height: 300px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+</style>

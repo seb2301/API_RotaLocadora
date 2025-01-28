@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const prisma = require("../config/database");
 
-// GET /users - listar todos os usuários
 router.get("/", async (req, res) => {
   try {
     const users = await prisma.user.findMany();
@@ -13,7 +12,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /users/:id - buscar usuário pelo id
 router.get("/:id", async (req, res) => {
   const userId = parseInt(req.params.id);
 
@@ -31,13 +29,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// PUT /users/:id - atualizar dados do usuário
 router.put("/:id", async (req, res) => {
   const userId = parseInt(req.params.id);
   const { name, birth_date } = req.body;
 
   try {
-    // Exemplo: atualiza name e birthDate
     let birthDateConverted = undefined;
     if (birth_date) {
       birthDateConverted = new Date(birth_date);
@@ -52,7 +48,7 @@ router.put("/:id", async (req, res) => {
       where: { id: userId },
       data: {
         name,
-        birthDate: birthDateConverted, // se for undefined, não atualiza
+        birthDate: birthDateConverted, 
       },
     });
 
@@ -63,7 +59,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /users/:id - apagar usuário
 router.delete("/:id", async (req, res) => {
   const userId = parseInt(req.params.id);
 

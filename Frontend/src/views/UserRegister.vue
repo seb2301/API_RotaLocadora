@@ -2,7 +2,11 @@
   <div class="register-container">
     <div class="register-box">
       <div class="register-header">
-        <img src="@/assets/logo.png" alt="Logo RotaLocadora" class="register-logo" />
+        <img
+          src="@/assets/logo.png"
+          alt="Logo RotaLocadora"
+          class="register-logo"
+        >
         <h2>Novo Cadastro</h2>
       </div>
       <form @submit.prevent="registerUser">
@@ -13,37 +17,39 @@
             type="text"
             placeholder="Digite o nome de usuário"
             required
-          />
+          >
         </div>
 
         <div class="input-wrapper date-container">
-  <h4>Data de aniversário</h4>
-  <input
-    v-model="birth_date"
-    type="text"
-    placeholder="Selecione a data de aniversário"
-    readonly
-    @click="showDatePicker = !showDatePicker"
-  />
-  <button
-    type="button"
-    class="date-toggle"
-    @click="showDatePicker = !showDatePicker"
-  >
-    <i class="fa fa-chevron-down"></i>
-  </button>
+          <h4>Data de aniversário</h4>
+          <input
+            v-model="birth_date"
+            type="text"
+            placeholder="Selecione a data de aniversário"
+            readonly
+            @click="toggleDatePicker"
+          >
+          <button
+            type="button"
+            class="date-toggle"
+            @click="toggleDatePicker"
+          >
+            <i class="fa fa-chevron-down" />
+          </button>
 
-  <div v-if="showDatePicker" class="custom-calendar">
-  <v-date-picker
-    :mode="'single'"
-    :min-date="new Date(1900, 0, 1)"
-    :max-date="new Date(2100, 11, 31)"
-    @update:model-value="onDateSelected"
-  />
-</div>
-
-</div>
-
+          <div
+            v-if="showDatePicker"
+            class="custom-calendar"
+          >
+            <v-date-picker
+              :mode="'single'"
+              :model-value="birth_date ? new Date(birth_date) : null"
+              :min-date="new Date(1900, 0, 1)"
+              :max-date="new Date(2100, 11, 31)"
+              @update:model-value="onDateSelected"
+            />
+          </div>
+        </div>
 
         <div class="input-wrapper">
           <h5>E-mail</h5>
@@ -52,7 +58,7 @@
             type="email"
             placeholder="Digite o e-mail"
             required
-          />
+          >
         </div>
 
         <div class="input-wrapper password-container">
@@ -62,16 +68,30 @@
             :type="showPassword ? 'text' : 'password'"
             placeholder="Digite a senha"
             required
-          />
-          <button type="button" class="toggle-password" @click="togglePassword">
-            <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+          >
+          <button
+            type="button"
+            class="toggle-password"
+            @click="togglePassword"
+          >
+            <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'" />
           </button>
         </div>
 
-        <button type="submit" class="register-button">Cadastrar</button>
+        <button
+          type="submit"
+          class="register-button"
+        >
+          Cadastrar
+        </button>
       </form>
       <div class="register-footer">
-        <router-link to="/" class="login-link">Fazer login</router-link>
+        <router-link
+          to="/"
+          class="login-link"
+        >
+          Fazer login
+        </router-link>
       </div>
     </div>
   </div>
@@ -88,7 +108,6 @@ export default {
   },
   data() {
     return {
-      // Junte tudo aqui:
       name: "",
       birth_date: "",
       email: "",
@@ -101,17 +120,15 @@ export default {
     togglePassword() {
       this.showPassword = !this.showPassword;
     },
+    toggleDatePicker() {
+      this.showDatePicker = !this.showDatePicker;
+    },
     onDateSelected(date) {
-      // date é um objeto Date do v-calendar
-      this.birth_date = this.formatDate(date);
-      // Fecha o calendário
+      if (date) {
+        this.birth_date = date.toISOString().split('T')[0]; // Salva no formato 'YYYY-MM-DD'
+      }
       this.showDatePicker = false;
     },
-    formatDate(date) {
-      // formata por ex. '14/05/2024'
-      return new Intl.DateTimeFormat('pt-BR').format(date);
-    },
-
     async registerUser() {
       try {
         console.log("Tentando registrar usuário...");
@@ -125,25 +142,22 @@ export default {
         alert(`Usuário cadastrado com sucesso! ID do usuário: ${response.data.userId}`);
         console.log("Redirecionando para a página de login...");
 
-        // Redireciona para o login
         this.$router.push("/login");
       } catch (error) {
         console.error("Erro ao registrar usuário:", error.response?.data || error);
         alert(error.response?.data?.message || "Erro ao registrar usuário.");
       }
-    }
+    },
   },
 };
 </script>
 
-
 <style scoped>
-
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Em vez de height fixa, p/ layout adaptável */
+  min-height: 100vh;
   background: url("@/assets/login-background.png") no-repeat center center fixed;
   background-size: cover;
 }
@@ -152,9 +166,9 @@ export default {
   background-color: #fff;
   border-radius: 30px;
   padding: 2rem;
-  width: 380px; /* Ajuste conforme o mock do Figma */
+  width: 380px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .register-header {
@@ -174,30 +188,27 @@ export default {
   color: #333;
 }
 
-/* Estilo de cada input-wrapper */
 .input-wrapper {
   position: relative;
   margin-bottom: 1.3rem;
   width: 100%;
 }
 
-/* Rótulos “Nome de usuário”, “Data de Aniversário” etc. */
 .input-wrapper h3,
 .input-wrapper h4,
 .input-wrapper h5,
 .input-wrapper h6 {
   position: absolute;
-  top: -9px; 
-  left: 14px; 
+  top: -9px;
+  left: 14px;
   font-weight: 400;
   font-size: 0.8rem;
   color: #555;
-  background-color: #fff; 
+  background-color: #fff;
   padding: 0 5px;
-  z-index: 2; 
+  z-index: 2;
 }
 
-/* Inputs */
 .input-wrapper input {
   width: 100%;
   padding: 0.8rem;
@@ -217,12 +228,10 @@ export default {
   border-color: #007bff;
 }
 
-/* Ícone seta p/ baixo no input data */
 .date-container {
   position: relative;
 }
 
-/* Botão da seta */
 .date-toggle {
   position: absolute;
   top: 50%;
@@ -234,20 +243,20 @@ export default {
   color: #a9a7a9;
   cursor: pointer;
 }
+
 .date-toggle:hover {
   color: #007bff;
 }
 
-/* Calendário custom */
 .custom-calendar {
   position: absolute;
-  top: 60px; /* Ajuste p/ ficar logo abaixo do input */
+  top: 60px;
   left: 0;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
 
@@ -256,7 +265,7 @@ export default {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem; 
+  padding: 1rem;
   min-width: 250px;
   font-family: 'Roboto', sans-serif;
 }
@@ -265,14 +274,14 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem; 
+  margin-bottom: 1rem;
 }
 
 :deep(.vc-nav-title) {
   color: #007bff;
   font-weight: 600;
   text-transform: capitalize;
-  font-size: 1rem; 
+  font-size: 1rem;
 }
 
 :deep(.vc-arrows) {
@@ -291,7 +300,7 @@ export default {
 }
 
 :deep(.vc-arrows button:hover) {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
 }
 
 :deep(.vc-weeks) {
@@ -326,13 +335,11 @@ export default {
   cursor: default;
 }
 
-/* Dia selecionado */
 :deep(.vc-day.vc-day--selected) {
   background-color: #007bff;
   color: #fff;
 }
 
-/* Dia de hoje */
 :deep(.vc-day.vc-day--today) {
   border: 1px solid #007bff;
   color: #007bff;
@@ -346,8 +353,6 @@ export default {
   }
 }
 
-
-/* Input de senha c/ olho */
 .password-container {
   position: relative;
 }
@@ -366,11 +371,11 @@ export default {
   font-size: 1.2rem;
   color: #888;
 }
+
 .toggle-password:hover i {
   color: #007bff;
 }
 
-/* Botão de cadastrar */
 .register-button {
   background-color: #007bff;
   color: white;
@@ -383,11 +388,11 @@ export default {
   width: 100%;
   font-weight: 600;
 }
+
 .register-button:hover {
   background-color: #0056b3;
 }
 
-/* Rodapé c/ link de login */
 .register-footer {
   margin-top: 1rem;
 }
@@ -401,5 +406,4 @@ export default {
 .login-link:hover {
   text-decoration: underline;
 }
-
 </style>

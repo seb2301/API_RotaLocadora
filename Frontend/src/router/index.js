@@ -4,7 +4,6 @@ import UserLogin from "@/views/UserLogin.vue";
 import UserRegister from "@/views/UserRegister.vue";
 import VehicleList from "@/views/VehicleList.vue";
 import UserHistory from "@/views/UserHistory.vue";
-import VehicleDetailsPage from "@/views/VehicleDetailsPage.vue";
 
 
 const routes = [
@@ -12,8 +11,8 @@ const routes = [
   { path: "/register", name: "UserRegister", component: UserRegister },
   { path: "/vehicles", name: "VehicleList", component: VehicleList },
   { path: "/history", name: "UserHistory", component: UserHistory },
-  { path: "/vehicle/:id", name: "VehicleDetailsPage", component: VehicleDetailsPage },
-  { path: "/login", name: "Login", component: () => import("@/views/UserLogin.vue") }
+  { path: '/vehicle-details/:id', name: 'VehicleDetails', component: () => import('@/views/VehicleDetailsPage.vue') },
+  { path: "/login", name: "Login", component: () => import("@/views/UserLogin.vue") },
   
 ];
 

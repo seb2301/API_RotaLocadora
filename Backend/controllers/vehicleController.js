@@ -7,7 +7,7 @@ const prisma = require("../config/database");
  */
 exports.getAllVehicles = async (req, res) => {
   try {
-    const vehicles = await prisma.vehicle.findMany(); 
+    const vehicles = await prisma.vehicle.findMany();
     return res.status(200).json(vehicles);
   } catch (error) {
     console.error("Erro ao buscar veículos:", error);
@@ -29,10 +29,14 @@ exports.createVehicle = async (req, res) => {
     usage,
     isNew,
     comfortLevel,
-    location,
+    latitude,
+    longitude,
   } = req.body;
 
   try {
+    // Combine latitude e longitude em uma string para o campo "location"
+    const location = `${latitude},${longitude}`;
+
     // Cria o veículo
     const newVehicle = await prisma.vehicle.create({
       data: {
@@ -51,7 +55,6 @@ exports.createVehicle = async (req, res) => {
     // Registra no histórico
     await prisma.history.create({
       data: {
-        // Idealmente, req.userId vem de um middleware que extrai o ID do token
         userId: req.userId || 1,
         action: "Criou Veículo",
         details: `Usuário criou o veículo de placa ${newVehicle.plate}`,
@@ -82,10 +85,13 @@ exports.updateVehicle = async (req, res) => {
     usage,
     isNew,
     comfortLevel,
-    location,
+    latitude,
+    longitude,
   } = req.body;
 
   try {
+    const location = `${latitude},${longitude}`;
+
     const updatedVehicle = await prisma.vehicle.update({
       where: { id: parseInt(id, 10) },
       data: {
@@ -112,17 +118,17 @@ exports.updateVehicle = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Veículo atualizado com sucesso!", vehicle: updatedVehicle });
+      .json({
+        message: "Veículo atualizado com sucesso!",
+        vehicle: updatedVehicle,
+      });
   } catch (error) {
     console.error("Erro ao atualizar veículo:", error);
     return res.status(500).json({ message: "Erro ao atualizar veículo." });
   }
 };
 
-/**
- * DELETE /api/vehicles/:id
- * Exclui um veículo e registra no histórico
- */
+
 exports.deleteVehicle = async (req, res) => {
   const { id } = req.params;
   try {

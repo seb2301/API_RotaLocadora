@@ -31,7 +31,7 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-db.prisma = prisma; // Adiciona o cliente Prisma ao objeto db
+db.prisma = prisma; 
 
 module.exports = db;
 

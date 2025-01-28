@@ -1,10 +1,10 @@
 <template>
   <div
     v-if="isVisible"
-    class="modal"
+    class="app-modal"
   >
-    <div class="modal-content">
-      <header class="modal-header">
+    <div class="app-modal-content">
+      <header class="app-modal-header">
         <h2>{{ title }}</h2>
         <button
           class="close-btn"
@@ -13,26 +13,25 @@
           ×
         </button>
       </header>
-      <main class="modal-body">
+      <main class="app-modal-body">
         <slot />
       </main>
     </div>
   </div>
 </template>
-  
-  <script>
-  export default {
-    props: {
-      isVisible: Boolean,
-      title: String,
-    },
-    methods: {
-      closeModal() {
-        this.$emit('close');
-      },
-    },
-  };
-  </script>
+
+<script>
+export default {
+  name: 'AppModal', // Update the component name here
+  props: {
+    isVisible: Boolean,
+    title: String,
+  },
+  methods: {
+    // ...
+  }
+}
+</script>
   
   <style scoped>
   .modal {

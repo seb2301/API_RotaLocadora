@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const prisma = require("../config/database"); // Conexão com o Prisma
+const prisma = require("../config/database"); 
 const router = express.Router();
 
 // Endpoint para registrar usuário
@@ -76,7 +76,6 @@ router.post("/login", async (req, res) => {
       expiresIn: "1d",
     });
 
-    // (Opcional) Verifica o token se quiser debugá-lo
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.error("Token inválido:", err.message);

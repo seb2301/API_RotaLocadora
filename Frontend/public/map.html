@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>Rota Locadora</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css">
+    <script src="node_modules/leaflet/dist/leaflet.js"></script>
+
+    <style> 
+    #map {
+        height: 500px;
+        
+    }
+    </style>
+</head>
+<body>
+   
+    <iframe
+  :src="`/map.html?lat=${detailsVehicle.latitude}&lng=${detailsVehicle.longitude}`"
+  width="100%"
+  height="300"
+  style="border:0;"
+></iframe>
+
+    <script> var map = L.map('map').setView([-26.3051, -48.8461 ], 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+var marker = L.marker([51.5, -0.09]).addTo(map);
+
+//var circle = L.circle([51.508, -0.11], {
+    //color: 'red',
+    //fillColor: '#f03',
+    //fillOpacity: 0.5,
+  //  radius: 500
+//}).addTo(map);
+
+
+//var polygon = L.polygon([
+  //  [51.509, -0.08],
+   // [51.503, -0.06],
+    //[51.51, -0.047]
+// ]).addTo(map);
+
+
+
+        joinville.bindPopup("<b>Bem-Vindo(a) á Joinville!</b><br>A Cidade da Flores.").openPopup();
+       // circle.bindPopup("I am a circle.");
+       // polygon.bindPopup("I am a polygon.");
+
+
+
+        var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+}
+
+map.on('click', onMapClick);
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const lat = parseFloat(urlParams.get("lat"));
+const lng = parseFloat(urlParams.get("lng"));
+
+var map = L.map("map").setView([lat, lng], 15);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+L.marker([lat, lng]).addTo(map);
+
+
+    </script>
+</body>
+
+</html>
