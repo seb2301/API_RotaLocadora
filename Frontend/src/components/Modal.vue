@@ -1,19 +1,12 @@
 <template>
-  <div
-    v-if="isVisible"
-    class="app-modal"
-  >
-    <div class="app-modal-content">
-      <header class="app-modal-header">
+  <div v-if="isVisible" class="modal-backdrop">
+    <div class="modal-content">
+      <header class="modal-header">
         <h2>{{ title }}</h2>
-        <button
-          class="close-btn"
-          @click="closeModal"
-        >
-          ×
-        </button>
+        <button class="close-btn" @click="closeModal">×</button>
       </header>
-      <main class="app-modal-body">
+      <main class="modal-body">
+        <!-- Qualquer conteúdo que o pai inserir vai aqui -->
         <slot />
       </main>
     </div>
@@ -22,18 +15,31 @@
 
 <script>
 export default {
-  name: 'AppModal', // Update the component name here
+  name: 'AppModal',
   props: {
     isVisible: Boolean,
-    title: String,
+    title: String
   },
   methods: {
-    // ...
+    closeModal() {
+      // Emite para o pai que fechou:
+      this.$emit("close");
+    }
   }
-}
+};
 </script>
+
+<style scoped>
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
-  <style scoped>
+  
   .modal {
     position: fixed;
     top: 0;

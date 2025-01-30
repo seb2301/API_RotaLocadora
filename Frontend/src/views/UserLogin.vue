@@ -102,77 +102,89 @@ export default {
 </script>
 
 <style scoped>
+/* Fundo e centralização */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-
   background: url("@/assets/login-background.png") no-repeat center center fixed;
   background-size: cover;
 }
 
+/* Caixa do login */
 .login-box {
-  width: 380px;
+  width: 480px;
+  /* Remova a altura fixa se quiser permitir "auto" */
+  /* height: 460px; */
+
   background-color: #fff;
-  border-radius: 30px;
+  border-radius: 30px; /* ou 30px 0 0 0, se for só no canto sup. esquerdo */
   padding: 2rem;
-  text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  text-align: center;
+  position: relative; /* caso precise posicionar elementos absolutos dentro */
 }
 
+/* Logo e título */
 .login-header {
   margin-bottom: 1rem;
 }
 
 .login-logo {
-  width: 83px;
-height: 70px;
-top: 40px;
-left: 199px;
-gap: 0px;
-opacity: 0px;
-
-}
-
-.login-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-  color: #333;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.input-wrapper {
-  position: relative;
-  width: 100%;
+  width: 80px; /* Ajuste para seu layout */
+  height: 70px;
+  display: block;
   margin: 0 auto;
 }
 
-.input-wrapper h6 {
-  position: absolute;
-  top: -9px;
-  left: 14px;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: #333333;
-  background-color: white;
-  padding: 0 5px;
-  z-index: 2;
+.login-header h2 {
+  margin-top: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
 }
 
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* inputs e botão centralizados */
+  gap: 1.2rem;         /* espaçamento vertical */
+  margin-top: 1rem;
+}
+
+/* Container do input */
+.input-wrapper {
+  width: 75%;   /* define largura dos inputs */
+  position: relative;
+  margin-right: 7px;
+  margin-left: -7px;
+  
+}
+
+/* Label flutuante */
+.input-wrapper h6 {
+  position: absolute;
+  top: -38px;    /* ajustado para “cortar” a borda de cima do input */
+  left: 16px;   /* afasta da esquerda */
+  background-color: #fff;
+
+  padding: 0 6px;
+  font-size: 0.85rem;
+  color: #333;
+  z-index: 2;   /* acima do input */
+}
+
+/* Input em si */
 .input-wrapper input {
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 0.95rem;
   padding: 0.8rem;
-  color: #A9A7A9;
+  color: #000;
 }
 
 .input-wrapper input::placeholder {
@@ -184,6 +196,7 @@ form {
   border-color: #007bff;
 }
 
+/* Campo senha + ícone olho */
 .password-container {
   position: relative;
 }
@@ -200,34 +213,37 @@ form {
 
 .toggle-password i {
   font-size: 1.2rem;
-  color: #A9A7A9;
+  color: #999;
 }
 
 .toggle-password:hover i {
   color: #007bff;
 }
 
+/* Botão Entrar */
 .login-button {
+  width: 80%;  /* mesma largura dos inputs */
   background-color: #007bff;
-  color: white;
+  color: #fff;
   font-size: 1rem;
+  font-weight: 600;
   padding: 0.8rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .login-button:hover {
   background-color: #0056b3;
 }
 
+/* “Criar conta” */
 .login-footer {
-  margin-top: 1.2rem;
+  margin-top: 1rem;
 }
 
 .register-link {
-  color: #A9A7A9;
+  color: #555; /* ou #A9A7A9, caso queira mais claro */
   text-decoration: none;
   font-size: 0.9rem;
 }

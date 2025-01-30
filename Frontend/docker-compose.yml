@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Brasil2025@
+      MYSQL_DATABASE: rotalocadora
+      MYSQL_USER: rotalocadora_user
+      MYSQL_PASSWORD: Brasil2025@
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: backend-rota-locadora
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      JWT_SECRET: 508bf846b578af1b40c8cb81d4a827fdbc3d613dae91ee17ba60720020c1510fe53fcd719e1608eb660ac4a8a3892cefec3cd9d6690788d19973cd0f44ea2be0
+      DATABASE_URL: mysql://root:Brasil2025%40@db:3306/rotalocadora
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: frontend-rota-locadora
+    ports:
+      - "8080:80"
+    
+
+volumes:
+  db_data:

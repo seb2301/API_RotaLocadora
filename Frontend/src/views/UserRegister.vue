@@ -166,7 +166,7 @@ export default {
   background-color: #fff;
   border-radius: 30px;
   padding: 2rem;
-  width: 380px;
+  width: 480px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -182,10 +182,13 @@ export default {
 }
 
 .register-header h2 {
-  font-size: 1.5rem;
+  top: -60px;
+  font-size: 0.8rem;
   margin: 0;
   font-weight: 600;
   color: #333;
+  padding: 0 5px;
+  z-index: 2;
 }
 
 .input-wrapper {
@@ -199,7 +202,7 @@ export default {
 .input-wrapper h5,
 .input-wrapper h6 {
   position: absolute;
-  top: -9px;
+  top: -24px;
   left: 14px;
   font-weight: 400;
   font-size: 0.8rem;
@@ -210,7 +213,7 @@ export default {
 }
 
 .input-wrapper input {
-  width: 100%;
+  width: 90%;
   padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 8px;

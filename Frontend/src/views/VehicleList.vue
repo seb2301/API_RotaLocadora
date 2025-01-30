@@ -21,64 +21,44 @@
     </nav>
 
     <div class="filters">
-      <button
-        class="add-vehicle-btn"
-        @click="openCreateModal"
-      >
+      <button class="add-vehicle-btn" @click="openCreateModal">
         Cadastrar Veículo
       </button>
 
       <div class="filter-options">
+        <!-- Filtro de marca (multi-select) -->
         <div class="filter-item brand-filter" style="position: relative;">
-  <label class="filter-label">Marca</label>
-  <div
-    class="multi-select"
-    @click.stop="toggleBrandDropdown = !toggleBrandDropdown"
-  >
-    <span v-if="selectedBrands.length === 0">Selecione a marca do veículo</span>
-    <span v-else>{{ brandLabel }}</span>
-    <i class="fa fa-chevron-down" />
-  </div>
-  <div v-if="toggleBrandDropdown" class="multi-select-dropdown">
-    <div
-      v-for="brand in brandOptions"
-      :key="brand"
-      class="multi-select-option"
-    >
-      <input
-        :id="`brand-${brand}`"
-        v-model="selectedBrands"
-        type="checkbox"
-        :value="brand"
-      />
-      <label :for="`brand-${brand}`">{{ brand }}</label>
-    </div>
-  </div>
-</div>
+          <label class="filter-label">Marca</label>
+          <div class="multi-select" @click.stop="toggleBrandDropdown = !toggleBrandDropdown">
+            <span v-if="selectedBrands.length === 0">Selecione a marca do veículo</span>
+            <span v-else>{{ brandLabel }}</span>
+            <i class="fa fa-chevron-down" />
+          </div>
+          <div v-if="toggleBrandDropdown" class="multi-select-dropdown">
+            <div v-for="brand in brandOptions" :key="brand" class="multi-select-option">
+              <input
+                :id="`brand-${brand}`"
+                v-model="selectedBrands"
+                type="checkbox"
+                :value="brand"
+              />
+              <label :for="`brand-${brand}`">{{ brand }}</label>
+            </div>
+          </div>
+        </div>
 
-
-
+        <!-- Filtro de uso -->
         <div class="filter-item usage-filter">
           <label class="filter-label">Propriedade de uso</label>
-          <select
-            v-model="filters.usage"
-            class="dropdown"
-          >
-            <option value="">
-              Selecione o propósito de uso
-            </option>
-            <option value="Uso pessoal">
-              Uso pessoal
-            </option>
-            <option value="Veículo para locação">
-              Veículo para locação
-            </option>
-            <option value="Uso da empresa">
-              Uso da empresa
-            </option>
+          <select v-model="filters.usage" class="dropdown">
+            <option value="">Selecione o propósito de uso</option>
+            <option value="Uso pessoal">Uso pessoal</option>
+            <option value="Veículo para locação">Veículo para locação</option>
+            <option value="Uso da empresa">Uso da empresa</option>
           </select>
         </div>
 
+        <!-- Filtro de placa -->
         <div class="filter-item plate-filter">
           <label class="filter-label">Placa</label>
           <input
@@ -86,33 +66,25 @@
             type="text"
             class="input"
             placeholder="Digite a placa do veículo"
-          >
+          />
         </div>
 
         <!-- Botões de ação -->
         <div class="filter-actions">
-          <button
-            class="icon-button"
-            @click="searchVehicles"
-          >
+          <button class="icon-button" @click="searchVehicles">
             <i class="fa fa-search" />
           </button>
-          <button
-            class="icon-button"
-            @click="clearFilters"
-          >
+          <button class="icon-button" @click="clearFilters">
             <i class="fa fa-eraser" />
           </button>
-          <button
-            class="icon-button"
-            @click="toggleSideFilter"
-          >
+          <button class="icon-button" @click="toggleSideFilter">
             <i class="fa fa-bars" />
           </button>
         </div>
       </div>
     </div>
 
+    <!-- Tabela de veículos -->
     <table class="vehicle-table">
       <thead>
         <tr>
@@ -124,14 +96,11 @@
           <th>Zero-quilômetro?</th>
           <th>Nível de conforto</th>
           <th>Local de reposição (lat, long)</th>
-          <th /> 
+          <th />
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(vehicle, index) in filteredVehicles"
-          :key="vehicle.id"
-        >
+        <tr v-for="(vehicle, index) in filteredVehicles" :key="vehicle.id">
           <td>{{ vehicle.plate }}</td>
           <td>{{ vehicle.brand }} {{ vehicle.model }}</td>
           <td>{{ vehicle.year }}</td>
@@ -146,47 +115,29 @@
             >★</span>
           </td>
           <td>
-  <span v-if="vehicle.latitude && vehicle.longitude">
-    {{ vehicle.latitude }}, {{ vehicle.longitude }}
-  </span>
-  <span v-else>
-    Não informado
-  </span>
-</td>
+            <span v-if="vehicle.latitude && vehicle.longitude">
+              {{ vehicle.latitude }}, {{ vehicle.longitude }}
+            </span>
+            <span v-else>Não informado</span>
+          </td>
           <td class="actions-cell">
-            <button
-              class="three-dots-btn"
-              @click.stop="toggleRowMenu(index)"
-            >
+            <button class="three-dots-btn" @click.stop="toggleRowMenu(index)">
               <i class="fa fa-ellipsis-v" />
             </button>
-            <div
-              v-if="rowMenuOpen === index"
-              class="three-dots-menu"
-            >
-            <button @click="goToDetailsPage(vehicle.id)">Detalhes</button>
-
-
-              <button @click="openEditModal(vehicle)">
-                Editar
-              </button>
-              <button
-                class="delete-btn"
-                @click="deleteVehicle(vehicle)"
-              >
-                Deletar
-              </button>
+            <div v-if="rowMenuOpen === index" class="three-dots-menu">
+              <button @click="openDetails(vehicle)">Detalhes</button>
+              <button @click="openEditModal(vehicle)">Editar</button>
+              <button class="delete-btn" @click="deleteVehicle(vehicle)">Deletar</button>
             </div>
           </td>
         </tr>
         <tr v-if="filteredVehicles.length === 0">
-          <td colspan="9">
-            Nenhum veículo encontrado.
-          </td>
+          <td colspan="9">Nenhum veículo encontrado.</td>
         </tr>
       </tbody>
     </table>
 
+    <!-- Paginação (exemplo simples) -->
     <div class="pagination">
       <button
         v-for="p in totalPages"
@@ -197,207 +148,140 @@
       </button>
     </div>
 
-    <div
-      v-if="showCreateModal"
-      class="modal-overlay"
-    >
+    <!-- Modal de Criação de Veículo -->
+    <div v-if="showCreateModal" class="modal-overlay">
       <div class="modal">
         <div class="modal-header">
           <h2>Cadastro de Veículo</h2>
-          <button
-            class="close-btn"
-            @click="showCreateModal = false"
-          >
-            ×
-          </button>
+          <button class="close-btn" @click="showCreateModal = false">×</button>
         </div>
         <div class="modal-body">
-  <form @submit.prevent="createVehicle">
-    <div class="form-group">
-      <label>Placa</label>
-      <input v-model="newVehicle.plate" type="text" placeholder="Digite a placa..." required />
-    </div>
-    <div class="form-group">
-      <label>Marca</label>
-      
-      <select v-model="newVehicle.brand" required>
-        <option value="">Selecione a marca</option>
-        <option v-for="b in brandOptions" :key="b" :value="b">{{ b }}</option>
-      </select>
-    </div>
+          <form @submit.prevent="createVehicle">
+            <div class="form-group">
+              <label>Placa</label>
+              <input v-model="newVehicle.plate" type="text" placeholder="Digite a placa..." required />
+            </div>
+            <div class="form-group">
+              <label>Marca</label>
+              <select v-model="newVehicle.brand" required>
+                <option value="">Selecione a marca</option>
+                <option v-for="b in brandOptions" :key="b" :value="b">{{ b }}</option>
+              </select>
+            </div>
 
-    <div class="form-group">
-      <label>Modelo</label>
-      <input v-model="newVehicle.model" type="text" placeholder="Digite o modelo..." required />
-    </div>
-    <div class="form-group">
-      <label>Ano</label>
-      <select v-model="newVehicle.year" required>
-        <option v-for="year in yearList" :key="year" :value="year">{{ year }}</option>
-      </select>
-    </div>
+            <div class="form-group">
+              <label>Modelo</label>
+              <input v-model="newVehicle.model" type="text" placeholder="Digite o modelo..." required />
+            </div>
+            <div class="form-group">
+              <label>Ano</label>
+              <select v-model="newVehicle.year" required>
+                <option v-for="year in yearList" :key="year" :value="year">{{ year }}</option>
+              </select>
+            </div>
 
-    <div class="form-group">
-      <label>Cor</label>
-      <input v-model="newVehicle.color" type="text" placeholder="Ex: Preto, Vermelho..." required />
-    </div>
-    <div class="form-group">
-      <label>Propriedade de uso</label>
-      <select v-model="newVehicle.usage" required>
-        <option value="">Selecione</option>
-        <option value="Uso pessoal">Uso pessoal</option>
-        <option value="Veículo para locação">Veículo para locação</option>
-        <option value="Uso da empresa">Uso da empresa</option>
-      </select>
-    </div>
+            <div class="form-group">
+              <label>Cor</label>
+              <input v-model="newVehicle.color" type="text" placeholder="Ex: Preto, Vermelho..." required />
+            </div>
+            <div class="form-group">
+              <label>Propriedade de uso</label>
+              <select v-model="newVehicle.usage" required>
+                <option value="">Selecione</option>
+                <option value="Uso pessoal">Uso pessoal</option>
+                <option value="Veículo para locação">Veículo para locação</option>
+                <option value="Uso da empresa">Uso da empresa</option>
+              </select>
+            </div>
 
-    <div class="form-group">
-      <label>Latitude</label>
-      <input v-model="newVehicle.latitude" type="text" placeholder="Ex: -23.5" required />
-    </div>
-    <div class="form-group">
-      <label>Longitude</label>
-      <input v-model="newVehicle.longitude" type="text" placeholder="Ex: -46.6" required />
-    </div>
+            <div class="form-group">
+              <label>Latitude</label>
+              <input v-model="newVehicle.latitude" type="text" placeholder="Ex: -23.5" required />
+            </div>
+            <div class="form-group">
+              <label>Longitude</label>
+              <input v-model="newVehicle.longitude" type="text" placeholder="Ex: -46.6" required />
+            </div>
 
-    <div class="stars-container">
-      <label>Nível de conforto do veículo</label>
-      <div>
-        <span
-          v-for="n in 5"
-          :key="n"
-          :class="getStarClassCreate(n)"
-          @mouseover="hoverCreateStar(n)"
-          @mouseleave="hoverCreateStar(0)"
-          @click="selectCreateStar(n)"
-        >
-          ★
-        </span>
+            <div class="stars-container">
+              <label>Nível de conforto do veículo</label>
+              <div>
+                <span
+                  v-for="n in 5"
+                  :key="n"
+                  :class="getStarClassCreate(n)"
+                  @mouseover="hoverCreateStar(n)"
+                  @mouseleave="hoverCreateStar(0)"
+                  @click="selectCreateStar(n)"
+                >
+                  ★
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group" style="grid-column: span 2;">
+              <label>
+                <input v-model="newVehicle.isNew" type="checkbox" />
+                Veículo zero-quilômetro
+              </label>
+            </div>
+
+            <button type="submit" class="save-button">Salvar</button>
+          </form>
+        </div>
       </div>
     </div>
 
-    <div class="form-group" style="grid-column: span 2;">
-      <label>
-        <input v-model="newVehicle.isNew" type="checkbox" />
-        Veículo zero-quilômetro
-      </label>
-    </div>
-
-    <button type="submit" class="save-button">Salvar</button>
-  </form>
-</div>
-
-      </div>
-    </div>
-
-    <div
-      v-if="showEditModal"
-      class="modal-overlay"
-    >
+    <!-- Modal de Edição de Veículo -->
+    <div v-if="showEditModal" class="modal-overlay">
       <div class="modal">
         <div class="modal-header">
           <h2>Edição de Veículo</h2>
-          <button
-            class="close-btn"
-            @click="showEditModal = false"
-          >
-            ×
-          </button>
+          <button class="close-btn" @click="showEditModal = false">×</button>
         </div>
         <div class="modal-body">
           <form @submit.prevent="updateVehicle">
             <div class="form-group">
               <label>Placa</label>
-              <input
-                v-model="editVehicle.plate"
-                type="text"
-                disabled
-              >
+              <input v-model="editVehicle.plate" type="text" disabled />
             </div>
             <div class="form-group">
               <label>Marca</label>
-              <select
-                v-model="editVehicle.brand"
-                required
-              >
-                <option value="">
-                  Selecione a marca
-                </option>
-                <option
-                  v-for="b in brandOptions"
-                  :key="b"
-                  :value="b"
-                >
-                  {{ b }}
-                </option>
+              <select v-model="editVehicle.brand" required>
+                <option value="">Selecione a marca</option>
+                <option v-for="b in brandOptions" :key="b" :value="b">{{ b }}</option>
               </select>
             </div>
             <div class="form-group">
               <label>Modelo</label>
-              <input
-                v-model="editVehicle.model"
-                type="text"
-                required
-              >
+              <input v-model="editVehicle.model" type="text" required />
             </div>
             <div class="form-group">
               <label>Ano</label>
-              <select
-                v-model="editVehicle.year"
-                required
-              >
-                <option
-                  v-for="year in yearList"
-                  :key="year"
-                  :value="year"
-                >
-                  {{ year }}
-                </option>
+              <select v-model="editVehicle.year" required>
+                <option v-for="year in yearList" :key="year" :value="year">{{ year }}</option>
               </select>
             </div>
             <div class="form-group">
               <label>Cor</label>
-              <input
-                v-model="editVehicle.color"
-                type="text"
-                required
-              >
+              <input v-model="editVehicle.color" type="text" required />
             </div>
             <div class="form-group">
               <label>Propriedade de uso</label>
-              <select
-                v-model="editVehicle.usage"
-                required
-              >
-                <option value="">
-                  Selecione
-                </option>
-                <option value="Uso pessoal">
-                  Uso pessoal
-                </option>
-                <option value="Veículo para locação">
-                  Veículo para locação
-                </option>
-                <option value="Uso da empresa">
-                  Uso da empresa
-                </option>
+              <select v-model="editVehicle.usage" required>
+                <option value="">Selecione</option>
+                <option value="Uso pessoal">Uso pessoal</option>
+                <option value="Veículo para locação">Veículo para locação</option>
+                <option value="Uso da empresa">Uso da empresa</option>
               </select>
             </div>
             <div class="form-group">
               <label>Latitude</label>
-              <input
-                v-model="editVehicle.latitude"
-                type="text"
-                required
-              >
+              <input v-model="editVehicle.latitude" type="text" required />
             </div>
             <div class="form-group">
               <label>Longitude</label>
-              <input
-                v-model="editVehicle.longitude"
-                type="text"
-                required
-              >
+              <input v-model="editVehicle.longitude" type="text" required />
             </div>
 
             <div class="form-group">
@@ -418,44 +302,51 @@
 
             <div class="form-group">
               <label>
-                <input
-                  v-model="editVehicle.isNew"
-                  type="checkbox"
-                >
+                <input v-model="editVehicle.isNew" type="checkbox" />
                 Veículo zero-quilômetro
               </label>
             </div>
-            <button
-              type="submit"
-              class="save-button"
-            >
-              Salvar
-            </button>
+            <button type="submit" class="save-button">Salvar</button>
           </form>
         </div>
       </div>
     </div>
 
-    <DetailsModal
-  v-if="showDetailsModal"
-  :details-vehicle="detailsVehicle"
-  @close="showDetailsModal = false"
-/>
-
-
+    <!-- Modal de DETALHES usando AppModal -->
+    <AppModal
+      :isVisible="showDetailsModal"
+      title="Detalhes do Veículo"
+      @close="showDetailsModal = false"
+    >
+      <!-- Conteúdo do slot: dados do veículo + mapa -->
+      <div>
+        <h3>Placa: {{ detailsVehicle?.plate }}</h3>
+        <p>Marca/Modelo: {{ detailsVehicle?.brand }} {{ detailsVehicle?.model }}</p>
+        <p>Ano: {{ detailsVehicle?.year }}</p>
+        <p>Cor: {{ detailsVehicle?.color }}</p>
+        <p>Propriedade de uso: {{ detailsVehicle?.usage }}</p>
+        <p>
+          Latitude/Longitude:
+          {{ detailsVehicle?.latitude }}, {{ detailsVehicle?.longitude }}
+        </p>
+        <!-- Div para o mapa -->
+        <div ref="detailsMap" style="width:100%; height:300px; margin-top:1rem;"></div>
+      </div>
+    </AppModal>
   </div>
 </template>
 
 <script>
 import api from "@/services/api";
 import L from "leaflet";
-
-
-
+import AppModal from "@/components/Modal.vue"; // Ajuste para o caminho real
 
 export default {
-    name: "VehicleList",
-    data() {
+  name: "VehicleList",
+  components: {
+    AppModal
+  },
+  data() {
     return {
       userName: "",
       showUserMenu: false,
@@ -478,6 +369,7 @@ export default {
       hoverCreateStarValue: 0,
       hoverEditStarValue: 0,
 
+      // Veículo para cadastro
       newVehicle: {
         plate: "",
         brand: "",
@@ -490,6 +382,7 @@ export default {
         isNew: false,
         comfortLevel: 1,
       },
+      // Veículo para edição
       editVehicle: {
         id: null,
         plate: "",
@@ -503,39 +396,27 @@ export default {
         isNew: false,
         comfortLevel: 1,
       },
-      detailsVehicle: {},
+      // Veículo para detalhes
+      detailsVehicle: null,
 
       page: 1,
-      totalPages: [1,2,3], // Exemplo
+      totalPages: [1,2,3], // Exemplo de paginacao
+      mapInstance: null,  // Armazena instância do Leaflet
     };
   },
   computed: {
-    brandOptions() { return [
-        "Ford",
-        "Chevrolet",
-        "Toyota",
-        "Honda",
-        "Nissan",
-        "Jeep",
-        "Hyundai",
-        "BMW",
-        "Mercedes-Benz",
-        "Volkswagen",
-        "Audi",
-        "Fiat",
-        "Renault",
-        "Volvo",
-        "Scania",
-        "Iveco",
-      ]
-      
+    brandOptions() {
+      return [
+        "Ford", "Chevrolet", "Toyota", "Honda", "Nissan", "Jeep",
+        "Hyundai", "BMW", "Mercedes-Benz", "Volkswagen", "Audi", "Fiat",
+        "Renault", "Volvo", "Scania", "Iveco"
+      ];
     },
     brandLabel() {
       if (this.selectedBrands.length === 0) return "";
       const [first, ...rest] = this.selectedBrands;
       if (rest.length === 0) return first;
       return `${first} (+${rest.length})`;
-
     },
     filteredVehicles() {
       let list = [...this.vehicles];
@@ -562,11 +443,27 @@ export default {
   mounted() {
     // Obter o nome do usuário do localStorage
     this.userName = localStorage.getItem("userName") || "Usuário Anônimo";
+    // Carregar lista de veículos
     this.fetchVehicles();
   },
+  watch: {
+    // Quando o modal de detalhes abrir, montamos o mapa
+    showDetailsModal(newVal) {
+      if (newVal) {
+        // Esperar DOM atualizar para ter "detailsMap"
+        this.$nextTick(() => {
+          this.initMap();
+        });
+      } else {
+        // Opcional: se quiser destruir/resetar mapInstance quando fechar
+        if (this.mapInstance) {
+          this.mapInstance.remove();
+          this.mapInstance = null;
+        }
+      }
+    }
+  },
   methods: {
-
-    
     goToLogin() {
       this.$router.push("/login");
     },
@@ -584,25 +481,19 @@ export default {
       localStorage.removeItem("userName");
       this.$router.push("/login");
     },
-    
-    goToDetailsPage(id) {
-    this.$router.push({ name: 'VehicleDetails', params: { id } });
-  },
-  
 
+    // Carregar veículos
+    async fetchVehicles() {
+      try {
+        const response = await api.get("/vehicles");
+        console.log("Dados recebidos da API:", response.data);
+        this.vehicles = response.data;
+      } catch (error) {
+        console.error("Erro ao carregar veículos", error);
+      }
+    },
 
-
-
-async fetchVehicles() {
-  try {
-    const response = await api.get("/vehicles");
-    console.log("Dados recebidos da API:", response.data); // Adicione esta linha
-    this.vehicles = response.data;
-  } catch (error) {
-    console.error("Erro ao carregar veículos", error);
-  }
-},
-
+    // Filtros
     searchVehicles() {
       this.page = 1;
     },
@@ -612,8 +503,9 @@ async fetchVehicles() {
       this.filters.plate = "";
       this.page = 1;
     },
-    toggleSideFilter() {},
-
+    toggleSideFilter() {
+      // ...
+    },
     goToPage(p) {
       this.page = p;
     },
@@ -622,6 +514,7 @@ async fetchVehicles() {
       this.rowMenuOpen = (this.rowMenuOpen === idx) ? -1 : idx;
     },
 
+    // Abrir modal de cadastro
     openCreateModal() {
       this.newVehicle = {
         plate: "",
@@ -638,6 +531,8 @@ async fetchVehicles() {
       this.hoverCreateStarValue = 0;
       this.showCreateModal = true;
     },
+
+    // Controle de estrelas (cadastro)
     hoverCreateStar(n) {
       this.hoverCreateStarValue = n;
     },
@@ -650,6 +545,7 @@ async fetchVehicles() {
       this.newVehicle.comfortLevel = n;
     },
 
+    // Criar veículo
     async createVehicle() {
       try {
         await api.post("/vehicles", this.newVehicle);
@@ -662,11 +558,14 @@ async fetchVehicles() {
       }
     },
 
-   async openEditModal(vehicle) {
+    // Abrir modal de edição
+    openEditModal(vehicle) {
       this.editVehicle = { ...vehicle };
       this.hoverEditStarValue = 0;
       this.showEditModal = true;
     },
+
+    // Controle de estrelas (edição)
     hoverEditStar(n) {
       this.hoverEditStarValue = n;
     },
@@ -679,11 +578,12 @@ async fetchVehicles() {
       this.editVehicle.comfortLevel = n;
     },
 
+    // Salvar edição
     async updateVehicle() {
       try {
-        
         const vehicleId = this.editVehicle.id;
-        await api.put(`/vehicles/${vehicleId}`, {          plate: this.editVehicle.plate,
+        await api.put(`/vehicles/${vehicleId}`, {
+          plate: this.editVehicle.plate,
           brand: this.editVehicle.brand,
           model: this.editVehicle.model,
           year: this.editVehicle.year,
@@ -692,7 +592,7 @@ async fetchVehicles() {
           latitude: this.editVehicle.latitude,
           longitude: this.editVehicle.longitude,
           isNew: this.editVehicle.isNew,
-          comfortLevel: this.editVehicle.comfortLevel,
+          comfortLevel: this.editVehicle.comfortLevel
         });
         alert("Veículo editado com sucesso!");
         this.showEditModal = false;
@@ -703,23 +603,34 @@ async fetchVehicles() {
       }
     },
 
-    // MODAL DETALHES
-    mounted() {
-    if (this.detailsVehicle.latitude && this.detailsVehicle.longitude) {
-      const map = L.map("detailsMap").setView([
-        parseFloat(this.detailsVehicle.latitude),
-        parseFloat(this.detailsVehicle.longitude),
-      ], 15);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-      L.marker([
-        parseFloat(this.detailsVehicle.latitude),
-        parseFloat(this.detailsVehicle.longitude),
-      ]).addTo(map);
-    }
-  },
-  
+    // Abrir modal de detalhes
+    openDetails(vehicle) {
+      this.detailsVehicle = vehicle;
+      this.showDetailsModal = true;
+    },
 
-  async deleteVehicle(vehicle) {
+    // Inicializar mapa Leaflet dentro do modal
+    initMap() {
+      if (!this.detailsVehicle) return;
+
+      const lat = parseFloat(this.detailsVehicle.latitude) || 0;
+      const lng = parseFloat(this.detailsVehicle.longitude) || 0;
+
+      const mapEl = this.$refs.detailsMap;
+      if (!mapEl) return;
+
+      // Criar o mapa
+      this.mapInstance = L.map(mapEl).setView([lat, lng], 15);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19
+      }).addTo(this.mapInstance);
+
+      // Adicionar marcador
+      L.marker([lat, lng]).addTo(this.mapInstance);
+    },
+
+    // Deletar veículo
+    async deleteVehicle(vehicle) {
       if (!confirm(`Deseja deletar o veículo ${vehicle.plate}?`)) return;
       try {
         await api.delete(`/vehicles/${vehicle.id}`);
@@ -729,12 +640,10 @@ async fetchVehicles() {
         console.error("Erro ao deletar veículo", error);
       }
     }
-
   }
 };
-
-
 </script>
+
 
 <style scoped>
 .navbar {
