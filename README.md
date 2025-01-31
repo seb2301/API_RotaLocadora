@@ -61,7 +61,9 @@ O **RotaLocadora** é um sistema completo para gerenciar o cadastro, consulta e 
 #### 1. Certifique-se de que o Docker e o Docker Compose estão instalados.
 #### 2. Comandos para Inicialização:
 
+
 ```bash
+RUN npx prisma generate
 # Na raiz do diretório onde está o arquivo docker-compose.yml
 docker-compose up --build
 ```
@@ -88,6 +90,8 @@ docker logs [container_name]
 ```bash
 cd Backend
 npm install
+RUN npx prisma generate
+
 ```
 
 2. Configure as variáveis de ambiente no arquivo `.env`:

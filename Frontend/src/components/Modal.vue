@@ -56,7 +56,7 @@ export default {
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
-    max-width: 500px;
+    max-width: 800px;
   }
   .close-btn {
     background: none;

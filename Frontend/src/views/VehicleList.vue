@@ -314,25 +314,37 @@
 
     <!-- Modal de DETALHES usando AppModal -->
     <AppModal
-      :isVisible="showDetailsModal"
-      title="Detalhes do Veículo"
-      @close="showDetailsModal = false"
-    >
-      <!-- Conteúdo do slot: dados do veículo + mapa -->
-      <div>
-        <h3>Placa: {{ detailsVehicle?.plate }}</h3>
-        <p>Marca/Modelo: {{ detailsVehicle?.brand }} {{ detailsVehicle?.model }}</p>
+  :isVisible="showDetailsModal"
+  title="Detalhes do veículo"
+  @close="showDetailsModal = false"
+>
+  <div class="vehicle-details-card">
+    <div class="vehicle-header">
+      <!-- Ícone do carro e informações principais -->
+      <div class="vehicle-icon">
+        <img src="@/assets/icon-car.png" alt="Ícone Carro" />
+      </div>
+      <div class="vehicle-info">
+        <div class="plate-and-fleet">
+          <strong>{{ detailsVehicle?.plate }}</strong>
+          <span>Frota 101</span> 
+          <!-- ^ Ajuste conforme sua lógica. No Figma tinha algo tipo “Frota XYZ” -->
+        </div>
+        <p>{{ detailsVehicle?.brand }} {{ detailsVehicle?.model }}</p>
         <p>Ano: {{ detailsVehicle?.year }}</p>
         <p>Cor: {{ detailsVehicle?.color }}</p>
         <p>Propriedade de uso: {{ detailsVehicle?.usage }}</p>
-        <p>
-          Latitude/Longitude:
-          {{ detailsVehicle?.latitude }}, {{ detailsVehicle?.longitude }}
+        <p>Zero-quilômetro? {{ detailsVehicle?.isNew ? 'Sim' : 'Não' }}</p>
+        <p>Nível de conforto: 
+          <span v-for="n in detailsVehicle?.comfortLevel" :key="n" class="star">★</span>
         </p>
-        <!-- Div para o mapa -->
-        <div ref="detailsMap" style="width:100%; height:300px; margin-top:1rem;"></div>
       </div>
-    </AppModal>
+    </div>
+
+    <div ref="detailsMap" class="map-container"></div>
+  </div>
+</AppModal>
+
   </div>
 </template>
 
@@ -611,23 +623,21 @@ export default {
 
     // Inicializar mapa Leaflet dentro do modal
     initMap() {
-      if (!this.detailsVehicle) return;
+  if (!this.detailsVehicle) return;
 
-      const lat = parseFloat(this.detailsVehicle.latitude) || 0;
-      const lng = parseFloat(this.detailsVehicle.longitude) || 0;
+  const lat = parseFloat(this.detailsVehicle.latitude) || 0;
+  const lng = parseFloat(this.detailsVehicle.longitude) || 0;
+  const mapEl = this.$refs.detailsMap;
+  if (!mapEl) return;
 
-      const mapEl = this.$refs.detailsMap;
-      if (!mapEl) return;
+  this.mapInstance = L.map(mapEl).setView([lat, lng], 15);
 
-      // Criar o mapa
-      this.mapInstance = L.map(mapEl).setView([lat, lng], 15);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19
-      }).addTo(this.mapInstance);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(this.mapInstance);
 
-      // Adicionar marcador
-      L.marker([lat, lng]).addTo(this.mapInstance);
-    },
+  L.marker([lat, lng]).addTo(this.mapInstance);
+},
 
     // Deletar veículo
     async deleteVehicle(vehicle) {
@@ -1116,5 +1126,36 @@ export default {
   color: #ffc107;
   margin-right: 2px;
   font-size: 1.2rem;
+}
+
+.vehicle-details-card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  /* Ajuste de cores do seu tema */
+}
+
+.vehicle-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vehicle-icon img {
+  width: 50px;
+  height: 50px;
+}
+
+.vehicle-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>
